@@ -8,6 +8,8 @@
 #include "misc/proto/messages.pb.h"
 #include "misc/proto/ProtoUtils.h"
 #include "fmt/core.h"
+#include <chrono>
+#include <thread>
 
 using namespace Colors;
 using namespace TradingTypes;
@@ -62,14 +64,21 @@ namespace {
         return "Invalid symbol";
     }
 
-    ExchangeIPC::SupportedInstrumentsArray CreateInstrumentsArray(const std::unordered_set<std::string>& set) {
-        ExchangeIPC::SupportedInstrumentsArray array;
+    ExchangeIPC::SupportedInstrumentsArray CreateInstrumentsArray(const std::unordered_set<std::string>& instrumentsSet) {
+        ExchangeIPC::SupportedInstrumentsArray instrumentsArray;
+        // We store the supported instruments in a set for ease, but we need to 
+        // copy them into an array so they can live in shared memory. Reminder:
+        // we can't use any data structures that use heap memory in a shared memory
+        // region, because process A can't touch the heap of process B, and vice versa.
+        // An array doesn't have any pointers to any other data anywhere, so its data
+        // will only live in the shared memory region where we allocate it.
         unsigned i = 0;
-        for (const std::string& instrument : set) {
-            std::memcpy(array[i++], instrument.data(), OrderLimits::MAX_INSTRUMENT_LEN);
-            array[i][OrderLimits::MAX_INSTRUMENT_LEN] = '\0';
+        for (const std::string& instrument : instrumentsSet) {
+            std::memcpy(instrumentsArray[i], instrument.data(), instrument.size());
+            instrumentsArray[i][instrument.size()] = '\0';
+            ++i;
         }
-        return array;
+        return instrumentsArray;
     }
 }
 
@@ -90,13 +99,16 @@ ExchangeServer::ExchangeServer(const std::unordered_set<std::string>& supportedI
 { 
     SetOpen(false);
 
+    // even tho these are std::jthreads, we need to join
+    // them in a specific order and don't want to rely on 
+    // their declaration order.  
     sockMsgProcessingThread_.request_stop();
-    sendMsgsToBrokersThread_.request_stop();
     exchangeMsgProcessingThread_.request_stop();
+    sendMsgsToBrokersThread_.request_stop();
 
     sockMsgProcessingThread_.join();
-    sendMsgsToBrokersThread_.join();
     exchangeMsgProcessingThread_.join();
+    sendMsgsToBrokersThread_.join();
 }
 
 
@@ -118,6 +130,7 @@ void ExchangeServer::StartListening(int port, const std::string& ip)
 
 void ExchangeServer::SetOpen(bool isOpen) 
 {
+    assert(shmWithExchange_);
     bool old = shmWithExchange_->isOpen.exchange(isOpen);
     if (old != isOpen) {
         LOG(GetMarketOpenStr(isOpen));
@@ -146,7 +159,7 @@ void ExchangeServer::EnableSharedMemoryCleanupOnShutdown()
 
 void ExchangeServer::InitializeSocket_(int port, const std::string& ip)
 {
-    sock_ = std::make_unique<TcpServerSocket>(port, std::move(ip), numSockThreads);
+    sock_ = std::make_unique<TcpServerSocket>(port, ip, numSockThreads);
     sock_->SetOnNewCxnFxn([this](int cxnFd) { OnNewCxn_(cxnFd); });
     sock_->SetOnClientDiscoFxn([this](int discoCxnFd) { OnBrokerDiscxn_(discoCxnFd); } );
 }

@@ -5,6 +5,7 @@ class TcpServerSocket : public TcpSocketBase
 {
 public:
     enum class State {
+        Uninitialized,
         Bound,
         Listening,
         Error,
@@ -49,12 +50,12 @@ private:
     OnClientCxnFxn OnNewCxn_;
     OnClientCxnFxn OnClientDisco_;
 
-    std::atomic<State> state_ = State::Destroyed;
+    std::atomic<State> state_ = State::Uninitialized;
     std::atomic<int> epollFd_ = -1;
     std::atomic<int> numActiveConnections_ = 0;
     
     std::mutex superBuffersMutex_;
     std::unordered_map<int, SuperBuffer> superBuffersMap_;
 
-    std::unique_ptr<boost::asio::thread_pool> eventHandlerThreads_;
+    std::unique_ptr<boost::asio::thread_pool> eventHandlerThreadPool_;
 };

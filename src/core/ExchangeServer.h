@@ -64,8 +64,6 @@ private:
     const std::unordered_set<std::string> supportedInstruments_;
     unsigned allTimeCxns_ = 0; 
 
-    std::unique_ptr<TcpServerSocket> sock_; // manages connections with clients (brokers)
-
     SharedMemoryRegion shrMem_;
     ExchangeIPC::Layout* shmWithExchange_ = nullptr;
 
@@ -92,4 +90,6 @@ private:
     using CxnFd = int;
     boost::bimap<TradingTypes::SessionId, CxnFd> sessionIdsMap_;
     mutable std::mutex sessionsMutex_;
+
+    std::unique_ptr<TcpServerSocket> sock_; // manages connections with clients (brokers)
 };

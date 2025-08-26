@@ -49,10 +49,7 @@ MatchingEngine::MatchingEngine(const std::string& instrument, MatchingEngineFill
 
 
 /*virtual*/ MatchingEngine::~MatchingEngine() 
-{ 
-    matchingThread_.request_stop();
-    matchingThread_.join();
-}
+{ }
 
 
 bool MatchingEngine::AddOrder(std::unique_ptr<ExchangeOrder> order)

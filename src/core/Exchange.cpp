@@ -52,18 +52,20 @@ Exchange::Exchange()
 
 
 /*virtual*/ Exchange::~Exchange() /*override*/
-{ 
+{
+    // stop processing incoming server msgs (order requests, etc.)
+    // before we clear the books
     serverMsgProcessingThread_.request_stop();
     serverMsgProcessingThread_.join();
 
-    // Clear the order books before we stop processing messages so
+    // Clear the order books before we stop processing outbound messages so
     // we can send the incoming 'Done' notifications (that are 
     // coming from the matching engines as they are being cleared)
     // upstream
     for (auto& [_, matchingEngine] : matchingEngines_) {
         matchingEngine->ClearBook();
     }
-
+    // just for clarity
     rawTradeProcessingThread_.request_stop();
     rawTradeProcessingThread_.join();
 }

@@ -35,6 +35,7 @@ public:
     virtual ~TcpSocketBase() = 0;
 
     std::optional<SockMsg> GetNextMessage();
+    void Close();
 
 protected:
     int CreateSocket_();

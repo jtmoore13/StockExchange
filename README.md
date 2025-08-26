@@ -56,13 +56,8 @@ I littered my code with comments about things I learned about C++ and low-level 
 **`CompileAndRun/`**: contains a script for each core component to clear the terminal, recompile, and relaunch the executable
   -  **`TerminalApps/`**: contains the entry point for each core component's terminal app.
 
-# Notes
-## Patterns I found useful:
-- Busy polling (user-space)
-- Passing messages via lock-free queues
 
-
-## For simplicity, I decided not to:
+# For simplicity, I decided not to:
 - **have the server attempt to track or persist broker identity across connection sessions.** If a broker disconnects and later reconnects—even from the same machine—it is treated as a new, unrelated client. As a result, any messages intended for disconnected brokers are discarded.
 - **implement a mechanism for the exchange to broadcast trades to all interested parties.** In a real-world system, this would typically be handled via multicast to publish each trade, or "the tape", to all market participants. Instead, my brokers only receive updates related to their own orders. While this approach is unrealistic for a production-grade exchange, it's a reasonable simplification for the purposes of my project.
 - **implement any kernel-bypass techniques in the Exchange.** Currently, my `Exchange` receives messages via a traditional socket buffer. The `TcpServerSocket` it owns uses a thread pool and `epoll()` to handle multiple clients, forwarding all incoming messages into a lock-free queue. The Exchange then dequeues messages sequentially on a separate thread. While this is acceptable for a simulation, it's far too slow for real life trading systems. The kernel's networking stack is slow and unnecessary in performance-critical cases like this.

@@ -1,5 +1,6 @@
 #include "TcpServerSocket.h"
 #include "Colors.h"
+#include <thread>
 
 using namespace Colors;
 
@@ -8,13 +9,13 @@ namespace {
     std::string GetStateStr(TcpServerSocket::State state)
     {
         static const std::unordered_map<TcpServerSocket::State, std::string> colors {
+            { TcpServerSocket::State::Uninitialized, "Uninitialized" },
             { TcpServerSocket::State::Destroyed, ColorUtils::Wrap("Destroyed", Grey) },
             { TcpServerSocket::State::Bound,     ColorUtils::Wrap("Bound", Yellow) },
             { TcpServerSocket::State::Listening, ColorUtils::Wrap("Listening", Green) },
             { TcpServerSocket::State::Error,     ColorUtils::Wrap("Error", Red) },
         };
-        auto it = colors.find(state);
-        if (it != colors.end()) {
+        if (auto it = colors.find(state); it != colors.end()) {
             return it->second;
         }
         return "Unknown";
@@ -25,7 +26,7 @@ namespace {
 TcpServerSocket::TcpServerSocket(int port, const std::string& ip, int numMsgHandlerThreads) :
    TcpSocketBase(port, ip)
 {
-    eventHandlerThreads_ = std::make_unique<boost::asio::thread_pool>(numMsgHandlerThreads);
+    eventHandlerThreadPool_ = std::make_unique<boost::asio::thread_pool>(numMsgHandlerThreads);
     ConfigureSocket_();
     BindSocket_();
 }
@@ -34,7 +35,13 @@ TcpServerSocket::TcpServerSocket(int port, const std::string& ip, int numMsgHand
 /*virtual*/ TcpServerSocket::~TcpServerSocket() /*override*/
 {
     CloseEpoll_();
-    eventHandlerThreads_->join();
+    // even tho these are std::jthreads, excplicitly join them 
+    // in this order so we don't have to worry about the order in which
+    // we declare them in the header file. We need the thread pool to 
+    // outlive the listening thread, because we post to the thread pool
+    // from the listening thread!
+    listeningThread_.join();
+    eventHandlerThreadPool_->join();
     SetState_(State::Destroyed);
 }
 
@@ -90,7 +97,7 @@ void TcpServerSocket::SetOnClientDiscoFxn(OnClientCxnFxn fxn)
 void TcpServerSocket::BindSocket_()
 {
     if (bind(sockFd_.load(), (sockaddr*)&serverAddr_, sizeof(serverAddr_)) == -1) {
-        SetErrorStateAndThrow_("Failed to bind to IP/Port");
+        SetErrorStateAndThrow_("Failed to bind to IP/Port: " + std::string(std::strerror(errno)));
     }
     LOG(fmt::format("Socket binded to port {}.", serverPort_));
 }
@@ -124,14 +131,21 @@ void TcpServerSocket::UpdateEpollFd_(int fd, bool isNew)
     /*
         Adds or re-arms an FD in epoll with EPOLLONESHOT.
         EPOLLONESHOT ensures an FD is reported only once by epoll_wait().
+        
         After handling the event, the FD must be explicitly re-armed,
         or it will never generate another event.
     */
     struct epoll_event event;
     event.events = EPOLLIN | EPOLLONESHOT;
     event.data.fd = fd;
-    int mode = isNew ? EPOLL_CTL_ADD : EPOLL_CTL_MOD;
-    if (epoll_ctl(epollFd_.load(), mode, fd, &event) == -1) {
+
+    const int epfd = epollFd_.load(std::memory_order_acquire);
+    if (epfd == -1) {
+        // Server is shutting down and has already closed the epoll fd.
+        // Silently ignore rather than throwing.
+        return;
+    }
+    if (epoll_ctl(epfd, isNew ? EPOLL_CTL_ADD : EPOLL_CTL_MOD, fd, &event) == -1) {
         SetErrorStateAndThrow_("epoll_ctl failed for " + std::string(isNew ? "ADD" : "MOD"));
     }
 }
@@ -171,20 +185,21 @@ void TcpServerSocket::HandleClientUpdate_(int clientFd)
 
 void TcpServerSocket::HandleEpollEvents_()
 {
-    // this function gets executed by listeningThread_
+    // this function gets executed by this->listeningThread_
 
     static constexpr int MAX_EVENTS = 512;
-    static constexpr int TIMEOUT = 1000; // ms
+    static constexpr int TIMEOUT = 1; // ms
     static epoll_event events[MAX_EVENTS];
 
     while (true) {
-        int epoll = epollFd_.load();
-        if (epoll == -1) {
-            break;
-        }
-        // waits for events, but 1000 ms timeout in case epollFd_ was changed
-        const int numEvents = epoll_wait(epoll, events, MAX_EVENTS, TIMEOUT);
+        // Just for this simulation, add a small timeout so we can detect when we're shutting
+        // down. In reality we should add a dedicated fd to the epoll that we notify when
+        // we want to shutdown (which would wake the epoll_wait() call), but too lazy for now.
+        const int numEvents = epoll_wait(epollFd_.load(), events, MAX_EVENTS, TIMEOUT);
         if (numEvents == -1) {
+            if (epollFd_.load() == -1) {
+                return; // epoll fd was closed, probably by the destructor
+            }
             SetErrorStateAndThrow_(fmt::format("unexpected epoll_wait() failed: {}", strerror(errno)));
         }
         for (int i = 0; i < numEvents; ++i) {
@@ -193,7 +208,7 @@ void TcpServerSocket::HandleEpollEvents_()
                 OnNewConnection_();
                 continue;
             }
-            boost::asio::post(*eventHandlerThreads_, [this, fdWithUpdate]() {
+            boost::asio::post(*eventHandlerThreadPool_, [this, fdWithUpdate]() {
                 try {
                     HandleClientUpdate_(fdWithUpdate);
                 } catch (const std::exception& e) {
@@ -257,6 +272,7 @@ void TcpServerSocket::CloseEpoll_()
 {
     // set to -1 for clarity, but still want to close the old fd
     int fd = epollFd_.exchange(-1);
+    std::cout << "trying to close..." << std::endl;
     if (close(fd) == -1) {
         SetErrorStateAndThrow_("Failed to close epollFd_");
     }

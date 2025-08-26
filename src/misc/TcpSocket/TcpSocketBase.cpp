@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <sys/epoll.h>
 #include "fmt/core.h"
+#include <iostream>
 
 
 TcpSocketBase::TcpSocketBase(int serverPort, const std::string& serverIp) :
@@ -18,8 +19,11 @@ TcpSocketBase::TcpSocketBase(int serverPort, const std::string& serverIp) :
 
 
 /*virtual*/ TcpSocketBase::~TcpSocketBase()
-{ }
+{ 
+    close(sockFd_);
+}
 
+// TODO : CHECK OUT SHARED MEMORY REGION, MAYBE BUG THERE?
 
 TcpSocketBase::SockMsg::SockMsg(const std::byte* src, size_t size, int cxnFd, int seqNum) :
    size(size),
@@ -39,6 +43,12 @@ std::optional<TcpSocketBase::SockMsg> TcpSocketBase::GetNextMessage()
         return msg;
     }
     return std::nullopt;
+}
+
+
+void TcpSocketBase::Close()
+{
+    close(sockFd_);
 }
 
 

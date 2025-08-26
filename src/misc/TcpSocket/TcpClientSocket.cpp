@@ -8,6 +8,7 @@ namespace {
     std::string GetStateStr(TcpClientSocket::State state)
     {
         static const std::unordered_map<TcpClientSocket::State, std::string> colors {
+            { TcpClientSocket::State::Uninitialized, "Uninitialized" },
             { TcpClientSocket::State::Connecting,    ColorUtils::Wrap("Connecting", Yellow) },
             { TcpClientSocket::State::Connected,     ColorUtils::Wrap("Connected",  Green) },
             { TcpClientSocket::State::Disconnected,  ColorUtils::Wrap("Disconnected", Red) },

@@ -1,4 +1,5 @@
 #include "SharedMemoryRegion.h"
+#include "Logger.h"
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -23,7 +24,7 @@ SharedMemoryRegion::~SharedMemoryRegion()
     if (shmFd_ != -1) {
         close(shmFd_);
     }
-     if (shouldUnlink_) {
+    if (shouldUnlink_) {
         shm_unlink(name_.c_str());
     }
 }
@@ -54,12 +55,13 @@ void SharedMemoryRegion::Initialize_()
             If shm_open() fails here, it likely means the ExchangeServer hasn't started yet.
             The ExchangeServer is the "manager" of this shared memory, meaning it is the one
             responsible for creating the shared memory region using O_CREAT. 
+            
             TLDR: the Exchange shouldn't run before the server.
         */
         throw std::system_error(errno, std::generic_category(), "shm_open failed");
     }
 
-    // expand the size
+    // expand the size of the region
     if (isManager_ && ftruncate(shmFd_, size_) == -1) {
         throw std::system_error(errno, std::generic_category(), "ftruncate failed");
     }

@@ -6,6 +6,7 @@ class TcpClientSocket : public TcpSocketBase
 {
 public:
     enum class State {
+        Uninitialized,
         Connecting,
         Connected,
         Disconnected,
@@ -41,7 +42,7 @@ private:
     virtual void SetErrorStateAndThrow_(std::string logMsg) override;
 
     int sockId_; // just for logging purposes
-    std::atomic<State> state_ = State::Destroyed;
+    std::atomic<State> state_ = State::Uninitialized;
 
     static constexpr std::chrono::seconds timeBetweenRetries_ = std::chrono::seconds(1);
     static constexpr struct timeval recvTimeout_ = {0, 500}; // seconds, micros
