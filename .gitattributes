@@ -1,0 +1,4 @@
+build/** linguist-vendored
+bin/** linguist-vendored
+*.pb.cc linguist-generated
+*.pb.h linguist-generated

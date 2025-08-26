@@ -1,0 +1,5 @@
+/app/build/CMakeFiles/broker.dir
+/app/build/CMakeFiles/exchange.dir
+/app/build/CMakeFiles/exchange_server.dir
+/app/build/CMakeFiles/edit_cache.dir
+/app/build/CMakeFiles/rebuild_cache.dir

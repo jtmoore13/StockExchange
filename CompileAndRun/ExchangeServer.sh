@@ -1,0 +1,1 @@
+cmake --build ../build --target exchange_server && clear && ../bin/exchange_server

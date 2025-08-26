@@ -1,0 +1,24 @@
+{
+    "editor.semanticHighlighting.enabled": true,
+
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++",
+    
+    "C_Cpp.inlayHints.parameterNames.enabled": false,
+
+    "clangd.path": "/usr/bin/clangd-17",
+    "clangd.arguments": [
+        "--clang-tidy=true",
+        "--header-insertion=never",
+        "--background-index",
+        "--limit-results=100",
+        "--completion-style=detailed",
+        "--pch-storage=disk"
+    ],
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+        "editor.formatOnSave": false,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4
+    }
+}

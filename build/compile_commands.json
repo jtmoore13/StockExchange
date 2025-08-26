@@ -1,0 +1,132 @@
+[
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/broker.dir/src/misc/proto/messages.pb.cc.o -c /app/src/misc/proto/messages.pb.cc",
+  "file": "/app/src/misc/proto/messages.pb.cc"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/broker.dir/src/misc/Logger.cpp.o -c /app/src/misc/Logger.cpp",
+  "file": "/app/src/misc/Logger.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/broker.dir/src/misc/SharedMemoryRegion.cpp.o -c /app/src/misc/SharedMemoryRegion.cpp",
+  "file": "/app/src/misc/SharedMemoryRegion.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/broker.dir/src/misc/TcpSocket/TcpSocketBase.cpp.o -c /app/src/misc/TcpSocket/TcpSocketBase.cpp",
+  "file": "/app/src/misc/TcpSocket/TcpSocketBase.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/broker.dir/src/core/Broker.cpp.o -c /app/src/core/Broker.cpp",
+  "file": "/app/src/core/Broker.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/broker.dir/src/core/ExchangeOrder.cpp.o -c /app/src/core/ExchangeOrder.cpp",
+  "file": "/app/src/core/ExchangeOrder.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/broker.dir/src/misc/TcpSocket/TcpClientSocket.cpp.o -c /app/src/misc/TcpSocket/TcpClientSocket.cpp",
+  "file": "/app/src/misc/TcpSocket/TcpClientSocket.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/broker.dir/CompileAndRun/TerminalApps/BrokerTerminal.cpp.o -c /app/CompileAndRun/TerminalApps/BrokerTerminal.cpp",
+  "file": "/app/CompileAndRun/TerminalApps/BrokerTerminal.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange.dir/src/misc/proto/messages.pb.cc.o -c /app/src/misc/proto/messages.pb.cc",
+  "file": "/app/src/misc/proto/messages.pb.cc"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange.dir/src/misc/Logger.cpp.o -c /app/src/misc/Logger.cpp",
+  "file": "/app/src/misc/Logger.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange.dir/src/misc/SharedMemoryRegion.cpp.o -c /app/src/misc/SharedMemoryRegion.cpp",
+  "file": "/app/src/misc/SharedMemoryRegion.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange.dir/src/misc/TcpSocket/TcpSocketBase.cpp.o -c /app/src/misc/TcpSocket/TcpSocketBase.cpp",
+  "file": "/app/src/misc/TcpSocket/TcpSocketBase.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange.dir/src/core/Exchange.cpp.o -c /app/src/core/Exchange.cpp",
+  "file": "/app/src/core/Exchange.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange.dir/src/core/MatchingEngine.cpp.o -c /app/src/core/MatchingEngine.cpp",
+  "file": "/app/src/core/MatchingEngine.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange.dir/src/core/ExchangeOrder.cpp.o -c /app/src/core/ExchangeOrder.cpp",
+  "file": "/app/src/core/ExchangeOrder.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange.dir/CompileAndRun/TerminalApps/ExchangeTerminal.cpp.o -c /app/CompileAndRun/TerminalApps/ExchangeTerminal.cpp",
+  "file": "/app/CompileAndRun/TerminalApps/ExchangeTerminal.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/src/misc/proto/messages.pb.cc.o -c /app/src/misc/proto/messages.pb.cc",
+  "file": "/app/src/misc/proto/messages.pb.cc"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/src/misc/Logger.cpp.o -c /app/src/misc/Logger.cpp",
+  "file": "/app/src/misc/Logger.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/src/misc/SharedMemoryRegion.cpp.o -c /app/src/misc/SharedMemoryRegion.cpp",
+  "file": "/app/src/misc/SharedMemoryRegion.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/src/misc/TcpSocket/TcpSocketBase.cpp.o -c /app/src/misc/TcpSocket/TcpSocketBase.cpp",
+  "file": "/app/src/misc/TcpSocket/TcpSocketBase.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/src/core/Exchange.cpp.o -c /app/src/core/Exchange.cpp",
+  "file": "/app/src/core/Exchange.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/src/core/ExchangeServer.cpp.o -c /app/src/core/ExchangeServer.cpp",
+  "file": "/app/src/core/ExchangeServer.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/src/core/MatchingEngine.cpp.o -c /app/src/core/MatchingEngine.cpp",
+  "file": "/app/src/core/MatchingEngine.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/src/core/ExchangeOrder.cpp.o -c /app/src/core/ExchangeOrder.cpp",
+  "file": "/app/src/core/ExchangeOrder.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/src/misc/TcpSocket/TcpServerSocket.cpp.o -c /app/src/misc/TcpSocket/TcpServerSocket.cpp",
+  "file": "/app/src/misc/TcpSocket/TcpServerSocket.cpp"
+},
+{
+  "directory": "/app/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -I/app/src -I/app/src/misc -I/app/src/core -std=gnu++20 -o CMakeFiles/exchange_server.dir/CompileAndRun/TerminalApps/ExchangeServerTerminal.cpp.o -c /app/CompileAndRun/TerminalApps/ExchangeServerTerminal.cpp",
+  "file": "/app/CompileAndRun/TerminalApps/ExchangeServerTerminal.cpp"
+}
+]

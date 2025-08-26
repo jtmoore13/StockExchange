@@ -1,0 +1,71 @@
+syntax = "proto3";
+package proto;
+
+/*
+    All proto messages in our system will be wrapped in an
+    ExchangeNetworkMsg. Just easier to maintain that way. 
+*/
+
+message ExchangeNetworkMsg {
+    oneof payload {
+        OrderRequest order_request = 1;                 // broker --> server
+        CancelOrder cancel_order = 2;                   // broker --> server
+        CancelOrderResponse cancel_order_response = 3;  // exchange --> server --> broker
+        OrderStatusUpdate status_update = 4;            // exchange --> server --> broker
+        GatewayReject gateway_reject = 5;               // server --> broker
+        GatewayAck gateway_ack = 6;                     // server --> broker
+        Fill fill = 7;                                  // exchange --> server --> broker
+    }
+}
+
+
+message OrderRequest {
+    string instrument = 1;
+    uint32 qty = 2;
+    double price = 3;
+    uint32 side_type = 4;
+    uint32 price_type = 5;
+    uint64 order_id = 6;   // assigned if accepted
+    string symbol = 7;     // assigned by gateway (for easier debugging)
+}
+
+
+message CancelOrder {
+    uint64 order_num = 1;   // set by broker
+    uint64 session_id = 2;  // set by server
+}
+
+
+message CancelOrderResponse {
+    uint64 order_id = 1;
+    bool success = 2;
+}
+
+
+message OrderStatusUpdate {
+    uint64 order_id = 1;
+    uint32 status = 2;
+    string symbol = 3;
+    string details = 4;
+}
+
+
+message GatewayReject {
+    string reason = 1;
+    OrderRequest order_request = 2;
+}
+
+
+message GatewayAck {
+    uint64 order_id = 1;
+    string symbol = 2;
+}
+
+
+message Fill {
+    uint64 order_id = 1;
+    uint32 qty_traded = 2;
+    double price = 3;
+    string symbol = 4;
+    uint32 qty_remaining = 5;
+}
