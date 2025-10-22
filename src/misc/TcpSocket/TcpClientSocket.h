@@ -15,7 +15,7 @@ public:
     };
 
     TcpClientSocket(int port, const std::string& ip, int reconnectTimeoutSeconds, int id = -1);
-    virtual ~TcpClientSocket() override;
+    virtual ~TcpClientSocket();
 
     void ConnectToServer();
     bool IsConnected() const;

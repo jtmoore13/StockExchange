@@ -14,7 +14,7 @@ class Exchange : public LoggerBase
 {
 public:
     Exchange();
-    virtual ~Exchange() override;
+    virtual ~Exchange();
 
     void ProcessServerMessages();
 
